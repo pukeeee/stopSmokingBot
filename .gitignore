@@ -1,0 +1,7 @@
+/venv
+app/core/utils/config.py
+.DS_Store
+/db.sqlite3
+/database/models.py
+/app/l10n/en.ftl
+__pycache__/
