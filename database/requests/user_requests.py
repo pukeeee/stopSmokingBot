@@ -64,6 +64,24 @@ class UserRequests(BaseRepository):
             )
             user.cigarette_price = price
             return user
+    
+    
+    
+    async def set_plan(self, tg_id: int, plan: list) -> Optional[User]:
+        async with self.begin():
+            unix_time = int(time.time())
+            user = await self.session.scalar(
+                select(User).where(User.tg_id == tg_id)
+            )
+            user.plan = plan
+            user.plan_date = unix_time
+            user.actual = []
+            
+            return user
+
+
+
+
 
 ################################################
 """Функции-обертки для обратной совместимости"""
@@ -103,3 +121,9 @@ async def setCigaretteCount(tg_id: int, count: int) -> Optional[User]:
 async def setCigarettePrice(tg_id: int, price: int) -> Optional[User]:
     async with UserRequests() as repo:
         return await repo.set_cigarette_price(tg_id, price)
+
+
+
+async def setPlan(tg_id: int, plan: list) -> Optional[User]:
+    async with UserRequests() as repo:
+        return await repo.set_plan(tg_id, plan)

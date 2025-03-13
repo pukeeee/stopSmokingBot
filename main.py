@@ -7,18 +7,20 @@ from redis.asyncio import Redis
 from app.core.middlewares import LanguageMiddleware
 from database.models import async_main
 from app.handlers import __all__ as all_routers
-from app.core.utils.config import TOKEN
+from dotenv import load_dotenv
+import os
 
 
 
 async def main():
-    redis = Redis(host="localhost", port=6379, db=0)
+    load_dotenv()
+    redis = Redis(host = "localhost", port = 6379, db = 0)
     storage = RedisStorage(redis)
     
     await async_main()
     bot = Bot(
-        token=TOKEN, 
-        default=DefaultBotProperties(parse_mode=ParseMode.HTML),
+        token = os.getenv("TOKEN"), 
+        default = DefaultBotProperties(parse_mode = ParseMode.HTML),
         request_timeout = 60
     )
     
