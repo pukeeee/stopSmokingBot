@@ -8,6 +8,7 @@ from app.l10n.l10n import Message as L10nMessage
 from database.requests import getCigaretteCount, getCigarettePrice, setCigaretteCount, setCigarettePrice, getUser, setPlan
 from app.keyboards import settings_kb, setSettings_kb, plan_kb, checkPlan_kb
 from app.core.utils.create_graph import create_plan_graph
+from app.core.utils.graph_message import graph_message
 import matplotlib.pyplot as plt
 import io
 
@@ -87,6 +88,9 @@ async def donePlan_callback(callback: CallbackQuery, language_code: str, state: 
     
     await setPlan(callback.from_user.id, plan)
     
+    message = await graph_message(callback.from_user.id, plan, start_cigarettes, language_code)
+    
+    
     # Сначала отправляем график отдельным сообщением
     plot_buf = await create_plan_graph(plan)
     await callback.message.answer_photo(
@@ -94,7 +98,7 @@ async def donePlan_callback(callback: CallbackQuery, language_code: str, state: 
             plot_buf.getvalue(),
             filename="smoking_plan.png"
         ),
-        caption="План по дням:"
+        caption = message
     )
     
     # Затем отправляем сообщение с кнопками
