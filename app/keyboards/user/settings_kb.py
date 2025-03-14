@@ -9,11 +9,11 @@ from datetime import datetime
 async def settings_kb(language_code: str) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
     keyboard.row(
-        InlineKeyboardButton(text=L10nMessage.get_message(language_code, "cigarette_count_button"), callback_data = "cigarette_count_button"),
-        InlineKeyboardButton(text=L10nMessage.get_message(language_code, "cigarette_price_button"), callback_data = "cigarette_price_button")
+        InlineKeyboardButton(text = "Кількість сигарет", callback_data = "cigarette_count_button"),
+        InlineKeyboardButton(text = "Ціна сигарет", callback_data = "cigarette_price_button")
     )
     keyboard.row(
-        InlineKeyboardButton(text=L10nMessage.get_message(language_code, "back_to_menu"), callback_data = "back_to_menu_button")
+        InlineKeyboardButton(text = "Назад до меню", callback_data = "back_to_menu_button")
     )
     return keyboard.as_markup()
 
@@ -22,6 +22,6 @@ async def settings_kb(language_code: str) -> InlineKeyboardMarkup:
 async def setSettings_kb(language_code: str) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
     keyboard.row(
-        InlineKeyboardButton(text=L10nMessage.get_message(language_code, "back_to_settings"), callback_data = "back_to_settings_button")
+        InlineKeyboardButton(text = "Назад до налаштувань", callback_data = "back_to_settings_button")
     )
     return keyboard.as_markup()

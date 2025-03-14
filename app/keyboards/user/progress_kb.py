@@ -9,10 +9,22 @@ from datetime import datetime
 async def progress_kb(language_code: str) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
     keyboard.row(
-        InlineKeyboardButton(text=L10nMessage.get_message(language_code, "track_button"), callback_data = "track_button"),
-        InlineKeyboardButton(text=L10nMessage.get_message(language_code, "graph_button"), callback_data = "graph_button")
+        InlineKeyboardButton(text = "Трекінг", callback_data = "track_button"),
+        InlineKeyboardButton(text = "Графік", callback_data = "graph_button")
     )
     keyboard.row(
-        InlineKeyboardButton(text=L10nMessage.get_message(language_code, "back_to_menu_button"), callback_data = "back_to_menu_button")
+        InlineKeyboardButton(text = "Назад до меню", callback_data = "back_to_menu_button")
+    )
+    return keyboard.as_markup()
+
+
+
+async def track_kb(language_code: str) -> InlineKeyboardMarkup:
+    keyboard = InlineKeyboardBuilder()
+    keyboard.row(
+        InlineKeyboardButton(text = "Назад до трекінгу", callback_data = "back_to_progress_button")
+    )
+    keyboard.row(
+        InlineKeyboardButton(text = "Назад до меню", callback_data = "back_to_menu_button")
     )
     return keyboard.as_markup()

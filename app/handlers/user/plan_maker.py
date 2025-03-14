@@ -1,14 +1,13 @@
 from aiogram import Router, F
-from aiogram.types import Message, LabeledPrice, PreCheckoutQuery, CallbackQuery, FSInputFile, BufferedInputFile
+from aiogram.types import Message, LabeledPrice, PreCheckoutQuery, CallbackQuery, FSInputFile, BufferedInputFile, InputMediaPhoto
 from aiogram.enums.parse_mode import ParseMode
 from aiogram.filters import CommandStart, Command, CommandObject
 from aiogram.fsm.context import FSMContext
 from app.states import Setting, Plan
 from app.l10n.l10n import Message as L10nMessage
 from database.requests import getCigaretteCount, getCigarettePrice, setCigaretteCount, setCigarettePrice, getUser, setPlan
-from app.keyboards import settings_kb, setSettings_kb, plan_kb, checkPlan_kb
-from app.core.utils.create_graph import create_plan_graph
-from app.core.utils.graph_message import graph_message
+from app.keyboards import settings_kb, setSettings_kb, plan_kb, checkPlan_kb, mainMenu_kb
+from app.core.utils import create_plan_graph, graph_message, mainMenu
 import matplotlib.pyplot as plt
 import io
 
@@ -93,19 +92,18 @@ async def donePlan_callback(callback: CallbackQuery, language_code: str, state: 
     
     # Сначала отправляем график отдельным сообщением
     plot_buf = await create_plan_graph(plan)
-    await callback.message.answer_photo(
-        photo=BufferedInputFile(
-            plot_buf.getvalue(),
-            filename="smoking_plan.png"
-        ),
-        caption = message
+    await callback.message.edit_media(
+        media = InputMediaPhoto(
+            media = BufferedInputFile(
+                plot_buf.getvalue(),
+                filename="smoking_plan.png"
+            ),
+            caption = message
+        )
     )
     
-    # Затем отправляем сообщение с кнопками
-    await callback.message.answer(
-        text="Выберите действие:",
-        reply_markup=await plan_kb(language_code)
-    )
+    text = await mainMenu(callback.from_user.id, language_code)
+    await callback.message.answer(text, reply_markup = await mainMenu_kb(language_code))
     
     await callback.answer()
     await state.clear()
@@ -127,9 +125,8 @@ async def createPlan(days: int, cigEnd: int, cigStart: int):
     :param cigStart: начальное количество сигарет в день (например, 20)
     :param cigEnd: целевое количество сигарет к концу периода (например, 0)
     :param days: общее количество дней, за которые планируется снижение (например, 30)
-    :return: список запланированных значений для каждого дня (индексация от 0 до days)
+    :return: список запланированных значений для каждого дня (индексация от 1 до days)
     """
-    
-    step = (cigStart - cigEnd) / days
-    plan = [round(max(cigEnd, cigStart - step * i)) for i in range(days + 1)]
+    step = (cigStart - cigEnd) / (days - 1) if days > 1 else cigStart - cigEnd
+    plan = [round(max(cigEnd, cigStart - step * i)) for i in range(days)]
     return plan

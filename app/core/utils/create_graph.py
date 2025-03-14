@@ -7,14 +7,13 @@ from datetime import datetime
 
 async def create_plan_graph(plan: list, actual: list = None) -> io.BytesIO:
     """Создает график плана снижения курения и возвращает его как BytesIO объект"""
-    # Очищаем все предыдущие фигуры
     plt.clf()
     plt.close('all')
     
-    # Настраиваем стиль
     plt.style.use('seaborn-v0_8-darkgrid')
     
-    days = list(range(len(plan)))
+    # Создаем список дней начиная с 1
+    days = list(range(1, len(plan) + 1))
     fig, ax = plt.subplots(figsize=(10, 6), facecolor='#282A36')
     ax.set_facecolor('#44475A')
     
@@ -23,14 +22,15 @@ async def create_plan_graph(plan: list, actual: list = None) -> io.BytesIO:
             markersize=8, markerfacecolor="#F8F8F2", markeredgecolor="white", markeredgewidth=1.5)
     
     if actual and len(actual) > 0:
-        ax.plot(days[:len(actual)], actual, label="Факт", marker="x", linestyle="--", color="#FF79C6", 
+        actual_days = list(range(1, len(actual) + 1))
+        ax.plot(actual_days, actual, label="Факт", marker="x", linestyle="--", color="#FF79C6", 
                 linewidth=2.5, markersize=8, markeredgewidth=2)
     
     # Настраиваем оси
-    ax.set_xticks(days)  # Показываем все дни на оси X
+    ax.set_xticks(days)  # Показываем все дни на оси X начиная с 1
     max_cigarettes = max(plan)
-    ax.set_ylim(0, max_cigarettes + 1)  # Устанавливаем диапазон оси Y
-    ax.set_yticks(range(0, max_cigarettes + 1))  # Показываем все значения на оси Y
+    ax.set_ylim(0, max_cigarettes + 1)
+    ax.set_yticks(range(0, max_cigarettes + 1))
     
     # Стилизуем оси, подписи и сетку
     ax.set_xlabel("День", fontsize=12, fontweight='bold', color='#FF79C6')
@@ -57,10 +57,10 @@ async def create_plan_graph(plan: list, actual: list = None) -> io.BytesIO:
     for text in legend.get_texts():
         text.set_color('#F8F8F2')
     
-    # Добавляем аннотации для начального и конечного значений
-    ax.annotate(f"{plan[0]}", (0, plan[0]), xytext=(0, plan[0]+0.5), 
+    # Обновляем аннотации для начального и конечного значений
+    ax.annotate(f"{plan[0]}", (1, plan[0]), xytext=(1, plan[0]+0.5), 
                 color='#FF79C6', fontweight='bold', ha='center')
-    ax.annotate(f"{plan[-1]}", (len(plan)-1, plan[-1]), xytext=(len(plan)-1, plan[-1]+0.5), 
+    ax.annotate(f"{plan[-1]}", (len(plan), plan[-1]), xytext=(len(plan), plan[-1]+0.5), 
                 color='#FF79C6', fontweight='bold', ha='center')
     
     # Сохраняем график в байтовый объект

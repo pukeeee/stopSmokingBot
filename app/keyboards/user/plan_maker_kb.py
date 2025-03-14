@@ -9,10 +9,10 @@ from datetime import datetime
 async def plan_kb(language_code: str) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
     keyboard.row(
-        InlineKeyboardButton(text=L10nMessage.get_message(language_code, "start_plan_button"), callback_data = "start_plan_button")
+        InlineKeyboardButton(text = "Почати план", callback_data = "start_plan_button")
     )
     keyboard.row(
-        InlineKeyboardButton(text=L10nMessage.get_message(language_code, "back_to_menu_button"), callback_data = "back_to_menu_button")
+        InlineKeyboardButton(text = "Назад до меню", callback_data = "back_to_menu_button")
     )
     return keyboard.as_markup()
 
@@ -21,9 +21,9 @@ async def plan_kb(language_code: str) -> InlineKeyboardMarkup:
 async def checkPlan_kb(language_code: str) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
     keyboard.row(
-        InlineKeyboardButton(text=L10nMessage.get_message(language_code, "done_plan_button"), callback_data = "done_plan_button")
+        InlineKeyboardButton(text = "Зберегти план", callback_data = "done_plan_button")
     )
     keyboard.row(
-        InlineKeyboardButton(text=L10nMessage.get_message(language_code, "back_to_plan_button"), callback_data = "back_to_plan_button")
+        InlineKeyboardButton(text = "Назад до плану", callback_data = "back_to_plan_button")
     )
     return keyboard.as_markup()

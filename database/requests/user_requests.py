@@ -81,6 +81,14 @@ class UserRequests(BaseRepository):
 
 
 
+    async def updateUserActual(self, tg_id: int, actual: list) -> Optional[User]:
+        async with self.begin():
+            user = await self.session.scalar(
+                select(User).where(User.tg_id == tg_id)
+            )
+            user.actual = actual
+            return user
+
 
 
 ################################################
@@ -127,3 +135,9 @@ async def setCigarettePrice(tg_id: int, price: int) -> Optional[User]:
 async def setPlan(tg_id: int, plan: list) -> Optional[User]:
     async with UserRequests() as repo:
         return await repo.set_plan(tg_id, plan)
+    
+
+
+async def updateUserActual(tg_id: int, actual: list) -> Optional[User]:
+    async with UserRequests() as repo:
+        return await repo.updateUserActual(tg_id, actual)

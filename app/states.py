@@ -10,3 +10,7 @@ class Plan(StatesGroup):
     setPlanDate = State()
     setStartCigarettes = State()
     setEndCigarettes = State()
+
+
+class Track(StatesGroup):
+    trackCigarettes = State()
